@@ -77,7 +77,31 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        // Validação dos dados recebidos na requisição
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:15'
+        ]);
+
+        // Encontrar o contato pelo ID
+        $contact = Contact::find($id);
+
+        // Verificar se o contato foi encontrado
+        if (!$contact) {
+            return response()->json(['message' => 'Contato não encontrado'], 404);
+        }
+
+        // Atualizar os dados do contato
+        $contact->name = $validatedData['name'];
+        $contact->email = $validatedData['email'];
+        $contact->phone = $validatedData['phone'];
+
+        // Salvar as mudanças no banco de dados
+        $contact->save();
+
+        // Retornar uma resposta adequada
+        return response()->json(['message' => 'Contato atualizado com sucesso', 'contact' => $contact], 200);
     }
 
     /**
