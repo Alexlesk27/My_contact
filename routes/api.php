@@ -19,4 +19,4 @@ use App\Http\Controllers\ContactController;
 Route::post('/v1/contact', [ContactController::class, 'store']);
 Route::get('/v1/contact', [ContactController::class, 'index']);
 Route::delete('/v1/contact/{contact}', [ContactController::class, 'destroy']);
-Route::put('/v1/contact/{id}', [ContactController::class, 'update']);
+Route::put('/v1/contact/{contact}', [ContactController::class, 'update']);

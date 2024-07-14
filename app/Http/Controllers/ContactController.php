@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ContactResource;
 use Illuminate\Http\Request;
 use App\Models\Contact;
 
@@ -14,7 +15,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return response()->json(Contact::all());
+        return response()->json(ContactResource::collection(Contact::all()));
     }
 
     /**
@@ -35,15 +36,19 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-       $contact = new Contact;
-       $contact->name = $request->name;
-       $contact->email = $request->email;
-       $contact->phone = $request->phone;
-       $contact->image = "asndjsajk";
+        $contact = new Contact;
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->phone = $request->phone;
 
-       $contact->save();
+        if ($request->hasFile('image')) {
+            $contact->image = $request->file('image')->store('/images');
+        }
 
-       return response()->json($contact) ;
+
+        $contact->save();
+
+        return response()->json($contact);
     }
 
     /**
@@ -54,7 +59,6 @@ class ContactController extends Controller
      */
     public function show($id)
     {
-        
     }
 
     /**
@@ -75,32 +79,21 @@ class ContactController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Contact $contact)
     {
-        // Validação dos dados recebidos na requisição
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'phone' => 'required|string|max:15'
-        ]);
 
-        // Encontrar o contato pelo ID
-        $contact = Contact::find($id);
+        $contact->name = $request->name;
+        $contact->email = $request->email;
+        $contact->phone = $request->phone;
 
-        // Verificar se o contato foi encontrado
-        if (!$contact) {
-            return response()->json(['message' => 'Contato não encontrado'], 404);
+        if ($request->hasFile('image')) {
+            $contact->image = $request->file('image')->store('/images');
         }
 
-        // Atualizar os dados do contato
-        $contact->name = $validatedData['name'];
-        $contact->email = $validatedData['email'];
-        $contact->phone = $validatedData['phone'];
 
-        // Salvar as mudanças no banco de dados
         $contact->save();
 
-        // Retornar uma resposta adequada
+        
         return response()->json(['message' => 'Contato atualizado com sucesso', 'contact' => $contact], 200);
     }
 
@@ -112,6 +105,6 @@ class ContactController extends Controller
      */
     public function destroy(Contact $contact)
     {
-     $contact->delete(); 
+        $contact->delete();
     }
 }
