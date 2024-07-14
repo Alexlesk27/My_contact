@@ -1,4 +1,6 @@
-Link do video: https://youtu.be/6gAvYJKHya4
+Link do video explicando o código: https://youtu.be/6gAvYJKHya4
+
+Link do video explicando sobre o funcionamento do sistema: https://youtu.be/7ByhCSUM0Zs
 # Projeto de Contatos - Backend (API)
 
 Este é o backend do projeto de gerenciamento de contatos. Ele fornece uma API para adicionar, editar, excluir e listar contatos. 
